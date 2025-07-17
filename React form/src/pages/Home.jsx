@@ -28,8 +28,6 @@ const MAX_FILES = 5;
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ACCEPTED_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
-
-
 export default function DynamicFormWithOTP() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileErrors, setFileErrors] = useState([]);
@@ -56,27 +54,27 @@ export default function DynamicFormWithOTP() {
           if (!value) return false;
 
           if (country === "India") {
-        const aadhaarRegex = /^\d{12}$/;
-        if (!aadhaarRegex.test(value)) {
-          return this.createError({ message: "Aadhaar must be exactly 12 digits" });
-        }
-      }
-
-         else if (country === "UAE") {
-        const emiratiIdRegex = /^\d{3}-\d{4}-\d{7}-\d{1}$/;
-        if (!emiratiIdRegex.test(value)) {
-          return this.createError({
-            message: "Emirates ID must be in format 000-0000-0000000-0",
-          });
-        }
-      }
-
-      else if (country === "USA") {
-        const ssnRegex = /^\d{9}$/;
-        if (!ssnRegex.test(value)) {
-          return this.createError({ message: "SSN must be exactly 9 digits" });
-        }
-      }
+            const aadhaarRegex = /^\d{12}$/;
+            if (!aadhaarRegex.test(value)) {
+              return this.createError({
+                message: "Aadhaar must be exactly 12 digits",
+              });
+            }
+          } else if (country === "UAE") {
+            const emiratiIdRegex = /^\d{3}-\d{4}-\d{7}-\d{1}$/;
+            if (!emiratiIdRegex.test(value)) {
+              return this.createError({
+                message: "Emirates ID must be in format 000-0000-0000000-0",
+              });
+            }
+          } else if (country === "USA") {
+            const ssnRegex = /^\d{9}$/;
+            if (!ssnRegex.test(value)) {
+              return this.createError({
+                message: "SSN must be exactly 9 digits",
+              });
+            }
+          }
           return true;
         }),
       email: Yup.string()
@@ -98,12 +96,10 @@ export default function DynamicFormWithOTP() {
     },
   });
 
- 
   useEffect(() => {
     formik.setFieldValue("city", "");
     formik.setFieldValue("idNumber", "");
   }, [formik.values.country]);
-
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -131,7 +127,6 @@ export default function DynamicFormWithOTP() {
     }
   };
 
- 
   const sendOtp = () => {
     if (!formik.isValid) {
       formik.setTouched({
@@ -154,7 +149,6 @@ export default function DynamicFormWithOTP() {
     );
   };
 
-
   const verifyOtp = () => {
     if (otpInput === "123456") {
       setOtpVerified(true);
@@ -163,6 +157,29 @@ export default function DynamicFormWithOTP() {
       setOtpError("Invalid OTP, please try again.");
       setOtpVerified(false);
     }
+  };
+
+  const formatEmiratesId = (value) => {
+    const digitsOnly = value.replace(/\D/g, ""); // Remove non-digit characters
+
+    let formatted = "";
+    if (digitsOnly.length <= 3) {
+      formatted = digitsOnly;
+    } else if (digitsOnly.length <= 7) {
+      formatted = `${digitsOnly.slice(0, 3)}-${digitsOnly.slice(3)}`;
+    } else if (digitsOnly.length <= 14) {
+      formatted = `${digitsOnly.slice(0, 3)}-${digitsOnly.slice(
+        3,
+        7
+      )}-${digitsOnly.slice(7)}`;
+    } else {
+      formatted = `${digitsOnly.slice(0, 3)}-${digitsOnly.slice(
+        3,
+        7
+      )}-${digitsOnly.slice(7, 14)}-${digitsOnly.slice(14, 15)}`;
+    }
+
+    return formatted;
   };
 
   return (
@@ -177,7 +194,7 @@ export default function DynamicFormWithOTP() {
     >
       <form style={{ width: 400 }} onSubmit={formik.handleSubmit} noValidate>
         <Typography variant="h5" mb={3} textAlign="center">
-React Form
+          React Form
         </Typography>
 
         {/* Country */}
@@ -251,7 +268,13 @@ React Form
                 : "SSN"
             }
             value={formik.values.idNumber}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              let value = e.target.value;
+              if (formik.values.country === "UAE") {
+                value = formatEmiratesId(value);
+              }
+              formik.setFieldValue("idNumber", value);
+            }}
             onBlur={formik.handleBlur}
             error={formik.touched.idNumber && Boolean(formik.errors.idNumber)}
             helperText={formik.touched.idNumber && formik.errors.idNumber}
@@ -327,8 +350,16 @@ React Form
               value={otpMethod}
               onChange={(e) => setOtpMethod(e.target.value)}
             >
-              <FormControlLabel value="email" control={<Radio />} label="Email" />
-              <FormControlLabel value="mobile" control={<Radio />} label="Mobile" />
+              <FormControlLabel
+                value="email"
+                control={<Radio />}
+                label="Email"
+              />
+              <FormControlLabel
+                value="mobile"
+                control={<Radio />}
+                label="Mobile"
+              />
             </RadioGroup>
           </FormControl>
         )}
@@ -384,7 +415,9 @@ React Form
           fullWidth
           type="submit"
           sx={{ mt: 3 }}
-          disabled={!otpVerified || !formik.isValid || selectedFiles.length === 0}
+          disabled={
+            !otpVerified || !formik.isValid || selectedFiles.length === 0
+          }
         >
           Submit
         </Button>
