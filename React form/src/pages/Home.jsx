@@ -177,7 +177,7 @@ export default function DynamicFormWithOTP() {
     >
       <form style={{ width: 400 }} onSubmit={formik.handleSubmit} noValidate>
         <Typography variant="h5" mb={3} textAlign="center">
-          Dynamic Form with OTP & File Upload
+React Form
         </Typography>
 
         {/* Country */}
