@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Alert } from "@mui/material";
 import { useFormik } from "formik";
-import CountrySelect from "../components/CountrySelect";
-import CitySelect from "../components/CitySelect";
-import IdNumberField from "../components/IdNumberField";
-import EmailField from "../components/Email";
-import MobileField from "../components/Mobile";
-import FileUpload from "../components/FileUpload";
-import OtpSection from "../components/OtpSection";
+import CountrySelect from "../components/formFields/CountrySelect";
+import CitySelect from "../components/formFields/CitySelect";
+import IdNumberField from "../components/formFields/IdNumberField";
+import EmailField from "../components/formFields/Email";
+import MobileField from "../components/formFields/Mobile";
+import FileUpload from "../components/formFields/FileUpload";
+import OtpSection from "../components/formFields/OtpSection";
 import { validationSchema } from "../utils/validationSchema";
 
 

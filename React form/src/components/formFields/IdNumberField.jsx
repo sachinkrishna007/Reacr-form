@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@mui/material";
-import { formatEmiratesId } from "../utils/Formatters";
+import { formatEmiratesId } from "../../utils/Formatters";
 
 
 export default function IdNumberField({ formik }) {

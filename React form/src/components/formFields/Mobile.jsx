@@ -4,7 +4,6 @@ import { TextField } from "@mui/material";
 export default function MobileField({ formik }) {
   return (
     <TextField
-      fimportullWidth
       margin="normal"
       id="mobile"
       name="mobile"
