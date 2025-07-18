@@ -130,7 +130,7 @@ export default function Form() {
           type="submit"
           sx={{ mt: 3 }}
           disabled={
-            !otpVerified || !formik.isValid || selectedFiles.length === 0
+            !otpVerified || !formik.isValid 
           }
         >
           Submit
